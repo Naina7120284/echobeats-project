@@ -1,0 +1,4 @@
+.env
+node_modules
+
+# we use gitignore so that when we push our code in github it will automatically delete the mentioned file 
