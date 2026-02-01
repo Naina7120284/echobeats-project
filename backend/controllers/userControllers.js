@@ -23,8 +23,11 @@ export const registerUser = TryCatch(async (req, res) => {
 
   generateToken(user._id, res);
 
+  // Exclude password from the response for security
+  const { password: _, ...userWithoutPassword } = user._doc;
+
   res.status(201).json({
-    user,
+    user: userWithoutPassword,
     message: "User Registered",
   });
 });
@@ -32,6 +35,7 @@ export const registerUser = TryCatch(async (req, res) => {
 export const loginUser = TryCatch(async (req, res) => {
   const { email, password } = req.body;
 
+  // Manually select password because sometimes models exclude it by default
   const user = await User.findOne({ email });
 
   if (!user)
@@ -48,20 +52,30 @@ export const loginUser = TryCatch(async (req, res) => {
 
   generateToken(user._id, res);
 
+  // Exclude password from the response
+  const { password: _, ...userWithoutPassword } = user._doc;
+
   res.status(200).json({
-    user,
+    user: userWithoutPassword,
     message: "User LoggedIN",
   });
 });
 
 export const myProfile = TryCatch(async (req, res) => {
-  const user = await User.findById(req.user._id);
+  // Ensure req.user exists (provided by your isAuth middleware)
+  const user = await User.findById(req.user._id).select("-password");
 
   res.json(user);
 });
 
 export const logoutUser = TryCatch(async (req, res) => {
-  res.cookie("token", "", { maxAge: 0 });
+  // Clear the cookie with standard clear options
+  res.cookie("token", "", { 
+    maxAge: 0,
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict"
+  });
 
   res.json({
     message: "Logged Out Successfully",
@@ -73,9 +87,7 @@ export const saveToPlaylist = TryCatch(async (req, res) => {
 
   if (user.playlist.includes(req.params.id)) {
     const index = user.playlist.indexOf(req.params.id);
-
     user.playlist.splice(index, 1);
-
     await user.save();
 
     return res.json({
@@ -84,10 +96,9 @@ export const saveToPlaylist = TryCatch(async (req, res) => {
   }
 
   user.playlist.push(req.params.id);
-
   await user.save();
 
   return res.json({
-    message: "added to playlist",
+    message: "Added to playlist",
   });
 });

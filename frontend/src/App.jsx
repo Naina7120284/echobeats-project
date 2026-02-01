@@ -9,24 +9,26 @@ import Admin from "./pages/Admin";
 import PlayList from "./pages/PlayList";
 import Album from "./pages/Album";
 import Landing from "./pages/Landing";
-import { Helmet } from "react-helmet";
+import { Helmet, HelmetProvider } from "react-helmet-async"; // 1. Import HelmetProvider
 import Music from "./pages/Music";
-import Podcasts from "./pages/Podcast";
 
 const App = () => {
   const { loading, user, isAuth } = UserData();
 
   return (
-    <>
+    // 2. Wrap everything in HelmetProvider to fix the "black screen" crash
+    <HelmetProvider>
       <Helmet>
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+        <title>EchoBeats</title>
       </Helmet>
+
       {loading ? (
         <Loading />
       ) : (
         <BrowserRouter>
           <Routes>
-          <Route path="/" element={isAuth ? <Home /> : <Landing />} />
+            <Route path="/" element={isAuth ? <Home /> : <Landing />} />
             <Route path="/home" element={isAuth ? <Home /> : <Login />} />
             <Route
               path="/playlist"
@@ -46,14 +48,10 @@ const App = () => {
               path="/register"
               element={isAuth ? <Home /> : <Register />}
             />
-            <Route
-              path="/podcasts"
-              element={isAuth ? <Podcasts user={user} /> : <Login />}  
-            />
           </Routes>
         </BrowserRouter>
       )}
-    </>
+    </HelmetProvider>
   );
 };
 

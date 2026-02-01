@@ -16,13 +16,14 @@ const Register = () => {
   const { fetchSongs, fetchAlbums } = SongData();
   const navigate = useNavigate();
 
+  // Password Validation Logic
   const isLengthValid = password.length >= 8;
   const hasUpperCase = /[A-Z]/.test(password);
   const hasLowerCase = /[a-z]/.test(password);
   const hasNumber = /\d/.test(password);
   const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
 
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
 
     const isPasswordValid =
@@ -33,12 +34,13 @@ const Register = () => {
       hasSpecialChar;
 
     if (!isPasswordValid) {
-      toast.error("Please follow password rules.");
+      toast.error("Please follow all password security rules.");
       setShowRules(true);
       return;
     }
 
-    registerUser(name, email, password, navigate, fetchSongs, fetchAlbums);
+    // Call registerUser and wait for the result
+    await registerUser(name, email, password, navigate, fetchSongs, fetchAlbums);
   };
 
   return (
@@ -49,31 +51,31 @@ const Register = () => {
           "url('https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=1600&q=80')",
       }}
     >
-      <div className="absolute inset-0 bg-black opacity-50"></div>
+      <div className="absolute inset-0 bg-black opacity-60"></div>
 
-      <div className="relative bg-white/80 bg-opacity-90 text-gray-800 p-8 rounded-lg shadow-md max-w-md w-full z-10">
-        <h1 className="text-4xl font-bold text-center mb-6 text-yellow-600">
+      <div className="relative bg-white/90 text-gray-800 p-8 rounded-lg shadow-2xl max-w-md w-full z-10 backdrop-blur-sm">
+        <h1 className="text-4xl font-bold text-center mb-2 text-yellow-600">
           EchoBeats
         </h1>
 
-        <div className="text-center mb-4">
-          <Link to="/" className="text-sm text-yellow-600 hover:underline">
+        <div className="text-center mb-6">
+          <Link to="/" className="text-sm text-gray-500 hover:text-yellow-600 hover:underline transition-colors">
             ← Back to Home
           </Link>
         </div>
 
-        <h2 className="text-2xl font-semibold text-center mb-6">Register</h2>
+        <h2 className="text-2xl font-semibold text-center mb-6">Create Account</h2>
 
         <form onSubmit={submitHandler}>
           <div className="mb-4">
             <label className="block text-sm font-medium mb-1" htmlFor="name">
-              Name
+              Full Name
             </label>
             <input
               id="name"
               type="text"
-              placeholder="Your Name"
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+              placeholder="John Doe"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 transition-all"
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
@@ -82,13 +84,13 @@ const Register = () => {
 
           <div className="mb-4">
             <label className="block text-sm font-medium mb-1" htmlFor="email">
-              Email
+              Email Address
             </label>
             <input
               id="email"
               type="email"
-              placeholder="Email"
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+              placeholder="name@example.com"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 transition-all"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -96,10 +98,7 @@ const Register = () => {
           </div>
 
           <div className="mb-6">
-            <label
-              className="block text-sm font-medium mb-1"
-              htmlFor="password"
-            >
+            <label className="block text-sm font-medium mb-1" htmlFor="password">
               Password
             </label>
             <div className="relative">
@@ -107,54 +106,39 @@ const Register = () => {
                 id="password"
                 type={showPassword ? "text" : "password"}
                 autoComplete="new-password"
-                placeholder="Password"
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 pr-10"
+                placeholder="Create a strong password"
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 pr-10 transition-all"
                 value={password}
+                onFocus={() => setShowRules(true)}
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
-              <span
+              <button
+                type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-2.5 text-gray-500 cursor-pointer"
+                className="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600 transition-colors"
               >
                 {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-              </span>
+              </button>
             </div>
 
+            {/* Password Validation Checklist */}
             {showRules && (
-              <div className="mt-2 text-xs text-gray-700 space-y-1">
-                <p
-                  className={`${
-                    isLengthValid ? "text-green-600" : "text-red-500"
-                  }`}
-                >
-                  • At least 8 characters
+              <div className="mt-3 p-3 bg-gray-50 rounded-md border border-gray-200 text-xs space-y-1 animate-fadeIn">
+                <p className={isLengthValid ? "text-green-600" : "text-red-500"}>
+                  {isLengthValid ? "✔" : "✘"} At least 8 characters
                 </p>
-                <p
-                  className={`${
-                    hasUpperCase ? "text-green-600" : "text-red-500"
-                  }`}
-                >
-                  • One uppercase letter
+                <p className={hasUpperCase ? "text-green-600" : "text-red-500"}>
+                  {hasUpperCase ? "✔" : "✘"} One uppercase letter
                 </p>
-                <p
-                  className={`${
-                    hasLowerCase ? "text-green-600" : "text-red-500"
-                  }`}
-                >
-                  • One lowercase letter
+                <p className={hasLowerCase ? "text-green-600" : "text-red-500"}>
+                  {hasLowerCase ? "✔" : "✘"} One lowercase letter
                 </p>
-                <p
-                  className={`${hasNumber ? "text-green-600" : "text-red-500"}`}
-                >
-                  • One number
+                <p className={hasNumber ? "text-green-600" : "text-red-500"}>
+                  {hasNumber ? "✔" : "✘"} One number
                 </p>
-                <p
-                  className={`${
-                    hasSpecialChar ? "text-green-600" : "text-red-500"
-                  }`}
-                >
-                  • One special character
+                <p className={hasSpecialChar ? "text-green-600" : "text-red-500"}>
+                  {hasSpecialChar ? "✔" : "✘"} One special character
                 </p>
               </div>
             )}
@@ -163,20 +147,23 @@ const Register = () => {
           <button
             type="submit"
             disabled={btnLoading}
-            className={`w-full py-2 px-4 rounded-md text-white font-semibold ${
+            className={`w-full py-2 px-4 rounded-md text-white font-semibold shadow-lg transition-all ${
               btnLoading
-                ? "bg-yellow-400 cursor-not-allowed"
-                : "bg-yellow-600 hover:bg-yellow-700"
+                ? "bg-yellow-400 cursor-not-allowed scale-95"
+                : "bg-yellow-600 hover:bg-yellow-700 active:scale-95"
             }`}
           >
-            {btnLoading ? "Please Wait..." : "Register"}
+            {btnLoading ? "Creating Account..." : "Register"}
           </button>
         </form>
 
         <div className="text-center mt-6">
-          <Link to="/login" className="text-sm text-yellow-600 hover:underline">
-            Already have an account? Login
-          </Link>
+          <p className="text-sm text-gray-600">
+            Already have an account?{" "}
+            <Link to="/login" className="font-bold text-yellow-600 hover:underline">
+              Login
+            </Link>
+          </p>
         </div>
       </div>
     </div>

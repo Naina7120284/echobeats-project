@@ -5,46 +5,52 @@ import cookieParser from "cookie-parser";
 import cloudinary from "cloudinary";
 import path from "path";
 
+
 dotenv.config();
 
+
 cloudinary.v2.config({
-  cloud_name: process.env.CLOUD_NAME || process.env.Cloud_Name,
-  api_key: process.env.CLOUD_API || process.env.Cloud_Api,
-  api_secret: process.env.CLOUD_SECRET || process.env.Cloud_Secret,
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUD_API,
+  api_secret: process.env.CLOUD_SECRET,
 });
 
 const app = express();
+const PORT = process.env.PORT || 5000;
 
-// using middlewaresAA
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-const port = process.env.PORT || 5000;
-
-//importing routes
 import userRoutes from "./routes/userRoutes.js";
 import songRoutes from "./routes/songRoutes.js";
 
-//using routes
 app.use("/api/user", userRoutes);
 app.use("/api/song", songRoutes);
 
+
 const __dirname = path.resolve();
 
-app.use(express.static(path.join(__dirname, "/frontend/dist")));
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
-});
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "../frontend/dist", "index.html"));
+  });
+}
 
 const startServer = async () => {
   try {
-    await connectDb();
-    app.listen(port, () => {
-      console.log(`Server is running http://localhost:${port}`);
+    console.log("Step 1: Attempting to connect to MongoDB...");
+    await connectDb(); 
+    console.log("Step 2: Database connected successfully.");
+
+    app.listen(PORT, () => {
+      console.log(`Step 3: Server is sprinting on http://localhost:${PORT}`);
     });
   } catch (error) {
-    console.error("Failed to start server:", error);
+    console.error("CRITICAL ERROR: Failed to start server!");
+    console.error("Error Message:", error.message);
     process.exit(1);
   }
 };
