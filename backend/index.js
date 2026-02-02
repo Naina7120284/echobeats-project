@@ -29,13 +29,14 @@ app.use("/api/user", userRoutes);
 app.use("/api/song", songRoutes);
 
 
-const __dirname = path.resolve();
+const absolutePath = path.resolve(); 
 
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "../frontend/dist")));
+  const distPath = path.join(process.cwd(), "frontend", "dist");
 
+  app.use(express.static(distPath));
   app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "../frontend/dist", "index.html"));
+    res.sendFile(path.join(distPath, "index.html"));
   });
 }
 
