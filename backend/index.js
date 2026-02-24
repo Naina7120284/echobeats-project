@@ -21,7 +21,7 @@ const PORT = process.env.PORT || 5000;
 
 const allowedOrigins = [
   "http://localhost:5173", 
-  "https://echobeats-project-z1m6.vercel.app"
+  "https://echobeats-project-z1m6.vercel.app",
 ];
 
 app.use(cors({
