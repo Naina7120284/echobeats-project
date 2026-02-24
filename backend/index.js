@@ -27,12 +27,10 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: function (origin, callback) {
-    if (!origin) return callback(null, true);
-    const isAllowed = allowedOrigins.includes(origin) || origin.endsWith(".vercel.app");
-    if (isAllowed) {
+    // Allow local and any vercel domain
+    if (!origin || origin.includes("localhost") || origin.endsWith(".vercel.app")) {
       callback(null, true);
     } else {
-      console.log("Blocked by CORS:", origin);
       callback(new Error("Not allowed by CORS"));
     }
   },
