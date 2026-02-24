@@ -1,6 +1,7 @@
 import axios from "axios";
 import { createContext, useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
+const server = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 const SongContext = createContext();
 
@@ -18,7 +19,7 @@ export const SongProvider = ({ children }) => {
 
   async function fetchSongs() {
     try {
-      const { data } = await axios.get("/api/song/all");
+      const { data } = await axios.get(`${server}/api/song/all`);
       setSongs(data);
       // Only set initial song if data exists to prevent "null" errors
       if (data.length > 0) {
@@ -35,7 +36,7 @@ export const SongProvider = ({ children }) => {
   async function fetchSingleSong() {
     if (!selectedSong) return; // Prevention: Don't call if no ID exists
     try {
-      const { data } = await axios.get("/api/song/single/" + selectedSong);
+      const { data } = await axios.get(`${server}/api/song/single/${selectedSong}`);
       setSong(data);
     } catch (error) {
       console.error("Error fetching single song:", error);
@@ -45,7 +46,7 @@ export const SongProvider = ({ children }) => {
   async function addAlbum(formData, setTitle, setDescription, setFile) {
     setLoading(true);
     try {
-      const { data } = await axios.post("/api/song/album/new", formData);
+      const { data } = await axios.post(`${server}/api/song/album/new`, formData);
       toast.success(data.message);
       fetchAlbums();
       setTitle("");
@@ -61,7 +62,7 @@ export const SongProvider = ({ children }) => {
   async function addSong(formData, setTitle, setDescription, setFile, setSinger, setAlbum) {
     setLoading(true);
     try {
-      const { data } = await axios.post("/api/song/new", formData);
+      const { data } = await axios.post(`${server}/api/song/new`, formData);
       toast.success(data.message);
       fetchSongs();
       setTitle("");
@@ -79,7 +80,7 @@ export const SongProvider = ({ children }) => {
   async function addThumbnail(id, formData, setFile) {
     setLoading(true);
     try {
-      const { data } = await axios.post("/api/song/" + id, formData);
+      const { data } = await axios.post(`${server}/api/song/thumbnail/${id}`, formData);
       toast.success(data.message);
       fetchSongs();
       setFile(null);
@@ -92,7 +93,7 @@ export const SongProvider = ({ children }) => {
 
   async function fetchAlbums() {
     try {
-      const { data } = await axios.get("/api/song/album/all");
+      const { data } = await axios.get(`${server}/api/song/album/all`);
       setAlbums(data);
     } catch (error) {
       console.error("Error fetching albums:", error);
@@ -101,7 +102,7 @@ export const SongProvider = ({ children }) => {
 
   async function deleteSong(id) {
     try {
-      const { data } = await axios.delete("/api/song/" + id);
+      const { data } = await axios.delete(`${server}/api/song/${id}`);
       toast.success(data.message);
       fetchSongs();
     } catch (error) {
@@ -111,7 +112,7 @@ export const SongProvider = ({ children }) => {
 
   async function fetchAlbumSong(id) {
     try {
-      const { data } = await axios.get("/api/song/album/" + id);
+      const { data } = await axios.get(`${server}/api/song/album/${id}`);
       setAlbumSong(data.songs);
       setAlbumData(data.album);
     } catch (error) {

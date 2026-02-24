@@ -1,6 +1,7 @@
 import axios from "axios";
 import { createContext, useContext, useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
+const server = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 // Global configuration for Axios to handle cookies correctly
 axios.defaults.withCredentials = true; 
@@ -23,7 +24,7 @@ export const UserProvider = ({ children }) => {
   async function registerUser(name, email, password, navigate, fetchSongs, fetchAlbums) {
     setBtnLoading(true);
     try {
-      const { data } = await axios.post("/api/user/register", { name, email, password });
+      const { data } = await axios.post(`${server}/api/user/register`, { name, email, password });
 
       toast.success(data.message);
       setUser(data.user);
@@ -40,7 +41,7 @@ export const UserProvider = ({ children }) => {
   async function loginUser(email, password, navigate, fetchSongs, fetchAlbums) {
     setBtnLoading(true);
     try {
-      const { data } = await axios.post("/api/user/login", { email, password });
+      const { data } = await axios.post(`${server}/api/user/login`, { email, password });
 
       toast.success(data.message);
       setUser(data.user);
@@ -56,7 +57,7 @@ export const UserProvider = ({ children }) => {
 
   async function fetchUser() {
     try {
-      const { data } = await axios.get("/api/user/me");
+      const { data } = await axios.get(`${server}/api/user/me`);
       setUser(data);
       setIsAuth(true);
     } catch (error) {
@@ -69,7 +70,7 @@ export const UserProvider = ({ children }) => {
 
   async function logoutUser() {
     try {
-      await axios.get("/api/user/logout");
+      await axios.get(`${server}/api/user/logout`);
       toast.success("Logged out successfully");
       setIsAuth(false);
       setUser(null);
@@ -82,7 +83,7 @@ export const UserProvider = ({ children }) => {
 
   async function addToPlaylist(id) {
     try {
-      const { data } = await axios.post("/api/user/song/" + id);
+      const { data } = await axios.post(`${server}/api/user/song/${id}`);
       toast.success(data.message);
       fetchUser();
     } catch (error) {
