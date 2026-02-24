@@ -9,7 +9,7 @@ import Admin from "./pages/Admin";
 import PlayList from "./pages/PlayList";
 import Album from "./pages/Album";
 import Landing from "./pages/Landing";
-import { Helmet, HelmetProvider } from "react-helmet-async"; // 1. Import HelmetProvider
+import { Helmet, HelmetProvider } from "react-helmet-async";
 import Music from "./pages/Music";
 
 const App = () => {

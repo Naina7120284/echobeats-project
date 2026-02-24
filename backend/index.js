@@ -4,10 +4,11 @@ import connectDb from "./database/db.js";
 import cookieParser from "cookie-parser";
 import cloudinary from "cloudinary";
 import path from "path";
-
+import cors from "cors";
+import userRoutes from "./routes/userRoutes.js";
+import songRoutes from "./routes/songRoutes.js";
 
 dotenv.config();
-
 
 cloudinary.v2.config({
   cloud_name: process.env.CLOUD_NAME,
@@ -18,18 +19,27 @@ cloudinary.v2.config({
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+app.use(cors()); 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-
-import userRoutes from "./routes/userRoutes.js";
-import songRoutes from "./routes/songRoutes.js";
-
 app.use("/api/user", userRoutes);
 app.use("/api/song", songRoutes);
 
 
-const absolutePath = path.resolve(); 
+const connectAndLog = async () => {
+  try {
+    console.log("Step 1: Attempting to connect to MongoDB...");
+    await connectDb();
+    console.log("Step 2: Database connected successfully.");
+  } catch (error) {
+    console.error("CRITICAL ERROR: Failed to connect to DB!", error.message);
+    if (process.env.NODE_ENV !== "production") {
+      process.exit(1);
+    }
+  }
+};
+connectAndLog();
 
 if (process.env.NODE_ENV === "production") {
   const distPath = path.join(process.cwd(), "frontend", "dist");
@@ -39,20 +49,10 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-const startServer = async () => {
-  try {
-    console.log("Step 1: Attempting to connect to MongoDB...");
-    await connectDb(); 
-    console.log("Step 2: Database connected successfully.");
+if (process.env.NODE_ENV !== "production") {
+  app.listen(PORT, () => {
+    console.log(`Step 3: Server is sprinting on http://localhost:${PORT}`);
+  });
+}
 
-    app.listen(PORT, () => {
-      console.log(`Step 3: Server is sprinting on http://localhost:${PORT}`);
-    });
-  } catch (error) {
-    console.error("CRITICAL ERROR: Failed to start server!");
-    console.error("Error Message:", error.message);
-    process.exit(1);
-  }
-};
-
-startServer();
+export default app;
