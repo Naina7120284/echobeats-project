@@ -27,7 +27,9 @@ const allowedOrigins = [
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) !== -1 || allowedOrigins.some(pattern => pattern.test(origin))) {
+    const isAllowed = allowedOrigins.includes(origin) || 
+                      origin.endsWith(".vercel.app");
+    if (isAllowed) {
       callback(null, true);
     } else {
       callback(new Error("Not allowed by CORS"));
