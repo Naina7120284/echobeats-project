@@ -55,20 +55,13 @@ const connectAndLog = async () => {
     }
   }
 };
-connectAndLog();
-
-if (process.env.NODE_ENV === "production") {
-  const distPath = path.join(process.cwd(), "frontend", "dist");
-  app.use(express.static(distPath));
-  app.get("*", (req, res) => {
-    res.sendFile(path.join(distPath, "index.html"));
-  });
-}
 
 if (process.env.NODE_ENV !== "production") {
   app.listen(PORT, () => {
     console.log(`Step 3: Server is sprinting on http://localhost:${PORT}`);
   });
 }
+
+connectAndLog();
 
 export default app;
