@@ -1,10 +1,9 @@
 import axios from "axios";
 import { createContext, useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
-const server = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const server = import.meta.env.VITE_API_URL || "http://localhost:5001";
 
 const SongContext = createContext();
-
 export const SongProvider = ({ children }) => {
   const [songs, setSongs] = useState([]);
   const [loading, setLoading] = useState(false);

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { createContext, useContext, useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
-const server = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const server = import.meta.env.VITE_API_URL || "http://localhost:5001";
 
 // Global configuration for Axios to handle cookies correctly
 axios.defaults.withCredentials = true; 
