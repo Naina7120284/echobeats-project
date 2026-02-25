@@ -1,38 +1,44 @@
-// src/pages/Landing.jsx
 import React from "react";
 import { Link } from "react-router-dom";
 import DeveloperModal from "../components/Developer";
 import { useState } from "react";
+
 const Landing = () => {
   const [showModal, setShowModal] = useState(false);
   return (
-    <div className="min-h-screen  text-white">
-      <nav className="bg-transparent text-white shadow-md fixed w-full top-0 left-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <Link
-              to="/"
-              className="text-3xl font-bold text-white hover:text-yellow-300"
-            >
-              EchoBeats
-            </Link>
-            <div className="space-x-6">
-              <a href="#about" className="hover:text-yellow-500 scroll-smooth">
+    <div className="min-h-screen text-white overflow-x-hidden">
+      {/* Navbar: flex-wrap ensures items don't collide on tiny screens */}
+<nav className="bg-transparent text-white shadow-md fixed w-full top-0 left-0 z-50">
+  <div className="max-w-7xl mx-auto px-4 md:px-6 py-4">
+    <div className="flex items-center justify-between">
+      {/* Brand Logo - Shrinks slightly on mobile to save space */}
+      <Link
+        to="/"
+        className="text-2xl md:text-3xl font-bold text-white hover:text-yellow-300 transition-colors"
+      >
+        EchoBeats
+      </Link>
+
+            {/* Desktop: space-x-6 | Mobile: space-x-2 for fit */}
+            <div className="flex items-center space-x-2 md:space-x-6">
+              <a href="#about" className="hidden sm:inline hover:text-yellow-500 scroll-smooth">
                 About
               </a>
 
               <button
                 onClick={() => setShowModal(true)}
-                className="hover:text-yellow-500"
+                className="hover:text-yellow-500 text-sm md:text-base"
               >
                 Developers
               </button>
-              <Link to="/login" className="hover:bg-gray-300 bg-white px-6 py-2 rounded-xl  text-black">
+              
+              <Link to="/login" className="hover:bg-gray-300 bg-white px-4 md:px-6 py-2 rounded-xl text-black text-sm md:text-base whitespace-nowrap">
                 Login
               </Link>
+              
               <Link
                 to="/register"
-                className="bg-yellow-500 px-6 py-2 rounded-xl hover:bg-yellow-600 text-white"
+                className="bg-yellow-500 px-4 md:px-6 py-2 rounded-xl hover:bg-yellow-600 text-white text-sm md:text-base whitespace-nowrap"
               >
                 Sign Up
               </Link>
@@ -45,6 +51,7 @@ const Landing = () => {
         </div>
       </nav>
 
+      {/* Hero Section */}
       <div
         className="flex items-center justify-center h-screen text-center bg-cover bg-center relative"
         style={{
@@ -53,25 +60,28 @@ const Landing = () => {
         }}
       >
         <div className="absolute inset-0 bg-black opacity-50"></div>
-        <div className="z-10 px-6 py-12">
-          <h1 className="text-5xl font-bold text-white mb-6 animate__animated animate__fadeIn">
+        <div className="z-10 px-6 py-12 w-full">
+          {/* text-4xl for mobile, md:text-5xl for desktop */}
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 animate__animated animate__fadeIn">
             Discover Your Favorite Music
           </h1>
-          <p className="text-lg text-white mb-8 max-w-2xl mx-auto">
-            Join EchoBeats to explore the latest albums, create personalized
-            playlists, and listen to curated music collections anytime,
-            anywhere. Music that speaks to your soul, waiting for you.
+          <p className="text-base md:text-lg text-white mb-8 max-w-2xl mx-auto">
+             Join EchoBeats to explore the latest albums, create personalized
+             playlists, and listen to curated music collections anytime,
+             anywhere. Music that speaks to your soul, waiting for you.
           </p>
-          <div className="space-x-6">
+
+          {/* BUTTON FIX: flex-col for mobile, md:flex-row for desktop */}
+          <div className="flex flex-col md:flex-row items-center justify-center gap-4">
             <Link
               to="/register"
-              className="bg-yellow-500 text-white px-6 py-3 rounded-xl hover:bg-yellow-600 transition duration-300"
+              className="w-[200px] md:w-auto bg-yellow-500 text-white px-8 py-3 rounded-xl hover:bg-yellow-600 active:bg-yellow-700 active:scale-95 transition-all duration-300"
             >
               Get Started
             </Link>
             <Link
               to="/login"
-              className="bg-white text-black px-6 py-3 rounded-xl hover:bg-gray-200 transition duration-300"
+              className="w-[200px] md:w-auto bg-white text-black px-8 py-3 rounded-xl hover:bg-gray-200 active:bg-gray-300 active:scale-95 transition-all duration-300"
             >
               Login
             </Link>
@@ -79,12 +89,14 @@ const Landing = () => {
         </div>
       </div>
 
+      {/* About Section */}
       <div className="bg-white text-black py-16" id="about">
         <div className="max-w-7xl mx-auto px-6">
           <h2 className="text-3xl font-semibold text-center mb-8">
             Why EchoBeats?
           </h2>
-          <div className="grid md:grid-cols-3 gap-8">
+          {/* md:grid-cols-3 keeps desktop 3-col, default grid-cols-1 fixes mobile squashing */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8">
             <div className="text-center">
               <div className="text-yellow-600 mb-4">
                 <i className="fas fa-headphones-alt text-4xl"></i>
@@ -113,30 +125,31 @@ const Landing = () => {
               </div>
               <h3 className="text-xl font-bold mb-2">Share with Friends</h3>
               <p className="text-gray-600">
-                Invite your friends to join EchoBeats and enjoy music together.
-                Share your favorite tracks and playlists with a few clicks.
+               Invite your friends to join EchoBeats and enjoy music together.
+               Share your favorite tracks and playlists with a few clicks.
               </p>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="bg-yellow-800 text-white py-12 text-center">
-        <h2 className="text-3xl font-bold mb-4">
+      {/* Footer CTA */}
+      <div className="bg-yellow-800 text-white py-12 px-4 text-center">
+        <h2 className="text-2xl md:text-3xl font-bold mb-4">
           Ready to Start Your Music Journey?
         </h2>
         <p className="text-lg mb-6">
-          Join EchoBeats today and start streaming your favorite music!
+          Join EchoBeats today and start streaming!
         </p>
         <Link
           to="/register"
-          className="bg-yellow-600 text-white px-8 py-4 rounded-xl hover:bg-yellow-700 transition duration-300"
+          className="bg-yellow-600 text-white px-8 py-4 rounded-xl hover:bg-yellow-700 active:scale-95 transition duration-300"
         >
           Sign Up Now
         </Link>
         <p className="mt-8 text-sm text-white-300 tracking-wide">
-    Made with <span className="text-red-500 animate-pulse">♥</span> by <span className="font-semibold">Team R<sup>2</sup>avn</span>
-  </p>
+          Made with <span className="text-red-500 animate-pulse">♥</span> by <span className="font-semibold">Team R<sup>2</sup>avn</span>
+        </p>
       </div>
     </div>
   );
