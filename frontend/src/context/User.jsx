@@ -38,22 +38,25 @@ export const UserProvider = ({ children }) => {
     }
   }
 
-  async function loginUser(email, password, navigate, fetchSongs, fetchAlbums) {
-    setBtnLoading(true);
-    try {
-      const { data } = await axios.post(`${server}/api/user/login`, { email, password });
+ async function loginUser(email, password, navigate, fetchSongs, fetchAlbums) {
+  setBtnLoading(true);
+  try {
+    const { data } = await axios.post(`${server}/api/user/login`, { email, password });
 
-      toast.success(data.message);
-      setUser(data.user);
-      setIsAuth(true);
-      setBtnLoading(false);
-      navigate("/home");
-      if (fetchSongs) fetchSongs();
-      if (fetchAlbums) fetchAlbums();
-    } catch (error) {
-      handleError(error);
-    }
+    toast.success(data.message);
+    setUser(data.user);
+    setIsAuth(true);
+    setBtnLoading(false);
+      await Promise.all([
+      fetchSongs ? fetchSongs() : Promise.resolve(),
+      fetchAlbums ? fetchAlbums() : Promise.resolve()
+    ]);
+
+    navigate("/home"); 
+  } catch (error) {
+    handleError(error);
   }
+}
 
   async function fetchUser() {
     try {
@@ -68,17 +71,21 @@ export const UserProvider = ({ children }) => {
     }
   }
 
-  async function logoutUser() {
-    try {
-      await axios.get(`${server}/api/user/logout`);
-      setIsAuth(false);
-      setUser(null);
-      toast.success("Logged out successfully");
-      window.location.href = "/"; 
-    } catch (error) {
-      handleError(error);
-    }
+async function logoutUser() {
+  try {
+    await axios.get(`${server}/api/user/logout`);
+    
+    // Clear state FIRST
+    setIsAuth(false);
+    setUser(null);
+    toast.success("Logged out successfully");
+
+    // FIX: Use replace instead of href to prevent "Back" button from re-logging in
+    window.location.replace("/"); 
+  } catch (error) {
+    handleError(error);
   }
+}
 
   async function addToPlaylist(id) {
     try {

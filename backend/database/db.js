@@ -1,15 +1,22 @@
 import mongoose from "mongoose";
 
+let isConnected = false; // Track connection state globally
+
 const connectDb = async () => {
+  if (isConnected) {
+    console.log("Using existing MongoDB connection");
+    return;
+  }
+
   try {
-    console.log("Connecting to Mongo with URI:", process.env.MONGO_URI); // Debug line
     const conn = await mongoose.connect(process.env.MONGO_URI, {
-        serverSelectionTimeoutMS: 5001, // Timeout after 5 seconds instead of waiting forever
+      serverSelectionTimeoutMS: 5000,
     });
+    isConnected = conn.connections[0].readyState;
     console.log(`MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
-    console.error("DETAILED MONGODB ERROR:", error.message);
-    process.exit(1);
+    console.error("MONGODB ERROR:", error.message);
+    // Don't exit process in serverless; let the next request try again
   }
 };
 
