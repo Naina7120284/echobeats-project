@@ -71,11 +71,10 @@ export const UserProvider = ({ children }) => {
   async function logoutUser() {
     try {
       await axios.get(`${server}/api/user/logout`);
-      toast.success("Logged out successfully");
       setIsAuth(false);
       setUser(null);
-      // Using window.location.href to home is cleaner than a reload sometimes
-      window.location.reload(); 
+      toast.success("Logged out successfully");
+      window.location.href = "/"; 
     } catch (error) {
       handleError(error);
     }
