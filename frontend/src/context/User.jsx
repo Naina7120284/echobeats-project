@@ -73,27 +73,22 @@ export const UserProvider = ({ children }) => {
 
 async function logoutUser() {
   try {
-    await axios.get(`${server}/api/user/logout`);
-    
-    // 1. Clear state locally first
     setIsAuth(false);
     setUser(null);
+    
+    await axios.get(`${server}/api/user/logout`);
+    
     localStorage.clear();
     sessionStorage.clear();
-    toast.success("Logged out successfully");
-   
-    setTimeout(() => {
-        window.location.href = "/"; // Force a full page reload to the landing page
-    }, 100);
     
+    toast.success("Logged out successfully");
+    window.location.href = "/"; 
   } catch (error) {
-      // Force cleanup even if server call fails
-      setIsAuth(false);
-      setUser(null);
-      localStorage.clear();
-      window.location.replace("/");
-    }
+    setIsAuth(false);
+    setUser(null);
+    window.location.href = "/";
   }
+}
 
   async function addToPlaylist(id) {
     try {
@@ -106,7 +101,10 @@ async function logoutUser() {
   }
 
   useEffect(() => {
-    fetchUser();
+    const checkAuth = async () => {
+      await fetchUser();
+  };
+    checkAuth();
   }, []);
 
   return (
