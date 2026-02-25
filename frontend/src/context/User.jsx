@@ -78,18 +78,22 @@ async function logoutUser() {
     // 1. Clear state locally first
     setIsAuth(false);
     setUser(null);
-    
-    toast.success("Logged out successfully");
-    localStorage.clear(); 
+    localStorage.clear();
     sessionStorage.clear();
-    window.location.replace("/"); 
+    toast.success("Logged out successfully");
+   
+    setTimeout(() => {
+        window.location.href = "/"; // Force a full page reload to the landing page
+    }, 100);
+    
   } catch (error) {
-    handleError(error);
-    setIsAuth(false);
-    setUser(null);
-    window.location.replace("/");
+      // Force cleanup even if server call fails
+      setIsAuth(false);
+      setUser(null);
+      localStorage.clear();
+      window.location.replace("/");
+    }
   }
-}
 
   async function addToPlaylist(id) {
     try {
