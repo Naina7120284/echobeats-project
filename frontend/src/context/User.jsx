@@ -75,15 +75,19 @@ async function logoutUser() {
   try {
     await axios.get(`${server}/api/user/logout`);
     
-    // Clear state FIRST
+    // 1. Clear state locally first
     setIsAuth(false);
     setUser(null);
+    
     toast.success("Logged out successfully");
-
-    // FIX: Use replace instead of href to prevent "Back" button from re-logging in
+    localStorage.clear(); 
+    sessionStorage.clear();
     window.location.replace("/"); 
   } catch (error) {
     handleError(error);
+    setIsAuth(false);
+    setUser(null);
+    window.location.replace("/");
   }
 }
 

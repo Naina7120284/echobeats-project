@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { UserData } from "./context/User";
 import Loading from "./components/Loading";
 import Login from "./pages/Login";
@@ -16,7 +16,6 @@ const App = () => {
   const { loading, user, isAuth } = UserData();
 
   return (
-    // 2. Wrap everything in HelmetProvider to fix the "black screen" crash
     <HelmetProvider>
       <Helmet>
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />
@@ -28,26 +27,32 @@ const App = () => {
       ) : (
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={isAuth ? <Home /> : <Landing />} />
-            <Route path="/home" element={isAuth ? <Home /> : <Login />} />
+            {/* 1. Public Landing Page */}
+            <Route path="/" element={isAuth ? <Navigate to="/home" /> : <Landing />} />
+
+            {/* 2. Authentication Pages */}
+            <Route path="/login" element={isAuth ? <Navigate to="/home" /> : <Login />} />
+            <Route path="/register" element={isAuth ? <Navigate to="/home" /> : <Register />} />
+
+            {/* 3. Protected Home and Features */}
+            <Route path="/home" element={isAuth ? <Home /> : <Navigate to="/login" />} />
+            
             <Route
               path="/playlist"
-              element={isAuth ? <PlayList user={user} /> : <Login />}
+              element={isAuth ? <PlayList user={user} /> : <Navigate to="/login" />}
             />
             <Route
               path="/music"
-              element={isAuth ? <Music user={user} /> : <Login />}
+              element={isAuth ? <Music user={user} /> : <Navigate to="/login" />}
             />
             <Route
               path="/album/:id"
-              element={isAuth ? <Album user={user} /> : <Login />}
+              element={isAuth ? <Album user={user} /> : <Navigate to="/login" />}
             />
-            <Route path="/admin" element={isAuth ? <Admin /> : <Login />} />
-            <Route path="/login" element={isAuth ? <Home /> : <Login />} />
-            <Route
-              path="/register"
-              element={isAuth ? <Home /> : <Register />}
-            />
+            
+            <Route path="/admin" element={isAuth && user?.role === "admin" ? <Admin /> : <Navigate to="/home" />} />
+            
+            <Route path="*" element={<Navigate to={isAuth ? "/home" : "/"} />} />
           </Routes>
         </BrowserRouter>
       )}
