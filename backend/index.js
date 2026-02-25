@@ -62,11 +62,9 @@ const connectAndLog = async () => {
   }
 };
 
-if (process.env.NODE_ENV !== "production") {
-  app.listen(PORT, () => {
-    console.log(`Step 3: Server is sprinting on http://localhost:${PORT}`);
-  });
-}
-
+app.listen(PORT, () => {
+  console.log(`Step 3: Server is sprinting on port ${PORT}`);
+  connectAndLog(); // Call your connection logger here
+});
 
 export default app;
