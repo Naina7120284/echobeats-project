@@ -5,12 +5,13 @@ const generateToken = (id, res) => {
     expiresIn: "15d",
   });
 
-  res.cookie("token", token, {
-    maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days
-    httpOnly: true, 
-    sameSite: "none", 
-    secure: true, 
-  });
+res.cookie("token", token, {
+  httpOnly: true,
+  secure: true,      // Required for Vercel
+  sameSite: "none",  // Required for cross-domain
+  maxAge: 30 * 24 * 60 * 60 * 1000,
+  partitioned: true, // <--- ADD THIS LINE
+});
 };
 
 export default generateToken;

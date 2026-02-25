@@ -13,7 +13,7 @@ const router = express.Router();
 router.post("/register", registerUser);
 router.post("/login", loginUser);
 router.get("/me", isAuth, myProfile);
-router.get("/logout", isAuth, logoutUser);
+router.get("/logout", logoutUser);
 router.post("/song/:id", isAuth, saveToPlaylist);
 
 export default router;
