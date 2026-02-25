@@ -21,8 +21,6 @@ const PORT = process.env.PORT || 5000;
 
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://echobeats-project-z1m6.vercel.app",
-  "https://echobeats-project.vercel.app"
 ];
 
 app.use(cors({
@@ -40,6 +38,10 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(async (req, res, next) => {
+  await connectDb(); 
+  next();
+});
 app.use("/api/user", userRoutes);
 app.use("/api/song", songRoutes);
 app.get("/", (req, res) => {
@@ -66,6 +68,5 @@ if (process.env.NODE_ENV !== "production") {
   });
 }
 
-connectAndLog();
 
 export default app;
