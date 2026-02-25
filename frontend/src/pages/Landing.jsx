@@ -8,48 +8,45 @@ const Landing = () => {
   return (
     <div className="min-h-screen text-white overflow-x-hidden">
       {/* Navbar: flex-wrap ensures items don't collide on tiny screens */}
-<nav className="bg-transparent text-white shadow-md fixed w-full top-0 left-0 z-50">
-  <div className="max-w-7xl mx-auto px-4 md:px-6 py-4">
+<nav className="bg-transparent backdrop-blur-md text-white fixed w-full top-0 left-0 z-50 transition-all">
+  <div className="max-w-7xl mx-auto px-4 py-4">
     <div className="flex items-center justify-between">
-      {/* Brand Logo - Shrinks slightly on mobile to save space */}
+      {/* Brand: Reduced font on tiny screens (text-xl) */}
       <Link
         to="/"
-        className="text-2xl md:text-3xl font-bold text-white hover:text-yellow-300 transition-colors"
+        className="text-xl xs:text-2xl md:text-3xl font-bold text-white hover:text-yellow-300 transition-colors"
       >
         EchoBeats
       </Link>
 
-            {/* Desktop: space-x-6 | Mobile: space-x-2 for fit */}
-            <div className="flex items-center space-x-2 md:space-x-6">
-              <a href="#about" className="hidden sm:inline hover:text-yellow-500 scroll-smooth">
-                About
-              </a>
+      <div className="flex items-center space-x-1 sm:space-x-2 md:space-x-6">
+        {/* Hiding About/Developers on small mobile to give room for Login/SignUp */}
+        <a href="#about" className="hidden lg:inline hover:text-yellow-500 scroll-smooth">
+          About
+        </a>
 
-              <button
-                onClick={() => setShowModal(true)}
-                className="hover:text-yellow-500 text-sm md:text-base"
-              >
-                Developers
-              </button>
-              
-              <Link to="/login" className="hover:bg-gray-300 bg-white px-4 md:px-6 py-2 rounded-xl text-black text-sm md:text-base whitespace-nowrap">
-                Login
-              </Link>
-              
-              <Link
-                to="/register"
-                className="bg-yellow-500 px-4 md:px-6 py-2 rounded-xl hover:bg-yellow-600 text-white text-sm md:text-base whitespace-nowrap"
-              >
-                Sign Up
-              </Link>
-            </div>
-          </div>
-          <DeveloperModal
-            isOpen={showModal}
-            onClose={() => setShowModal(false)}
-          />
-        </div>
-      </nav>
+        <button
+          onClick={() => setShowModal(true)}
+          className="hidden sm:inline hover:text-yellow-500 text-sm md:text-base"
+        >
+          Developers
+        </button>
+        
+        {/* Buttons: Smaller padding (px-3) on mobile so they fit side-by-side */}
+        <Link to="/login" className="hover:bg-gray-300 bg-white px-3 md:px-6 py-1.5 md:py-2 rounded-xl text-black text-xs md:text-base font-semibold whitespace-nowrap">
+          Login
+        </Link>
+        
+        <Link
+          to="/register"
+          className="bg-yellow-500 px-3 md:px-6 py-1.5 md:py-2 rounded-xl hover:bg-yellow-600 text-white text-xs md:text-base font-semibold whitespace-nowrap"
+        >
+          Sign Up
+        </Link>
+      </div>
+    </div>
+  </div>
+</nav>
 
       {/* Hero Section */}
       <div

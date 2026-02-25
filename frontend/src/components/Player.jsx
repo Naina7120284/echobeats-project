@@ -20,14 +20,12 @@ const Player = () => {
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
 
-  // Fetch song details when the selected song ID changes
   useEffect(() => {
     if (selectedSong) {
       fetchSingleSong();
     }
   }, [selectedSong]);
 
-  // Sync Audio Element with isPlaying state
   useEffect(() => {
     if (audioRef.current) {
       if (isPlaying) {
@@ -87,7 +85,6 @@ const Player = () => {
     }
   };
 
-  // Helper function to format time (00:00)
   const formatTime = (time) => {
     if (isNaN(time)) return "0:00";
     const minutes = Math.floor(time / 60);
@@ -96,77 +93,83 @@ const Player = () => {
   };
 
   return (
-    <div className="fixed bottom-0 w-full">
+    <div className="fixed bottom-0 w-full z-50">
       {song && (
-        <div className="h-20 bg-[#121212] flex justify-between items-center text-white px-4 border-t border-gray-800">
-          {/* Song Info */}
-          <div className="flex items-center gap-4 w-[30%]">
-            <img
-              src={song?.thumbnail?.url || "https://via.placeholder.com/50"}
-              className="w-12 h-12 rounded object-cover"
-              alt={song?.title}
-            />
-            <div className="hidden md:block overflow-hidden">
-              <p className="text-sm font-bold truncate">{song?.title}</p>
-              <p className="text-xs text-gray-400 truncate">{song?.singer}</p>
-            </div>
-          </div>
-
-          {/* Controls & Progress */}
-          <div className="flex flex-col items-center gap-2 w-[40%]">
-            <audio ref={audioRef} src={song?.audio?.url} />
+        <div className="h-24 md:h-20 bg-[#121212] flex flex-col md:flex-row justify-between items-center text-white px-2 md:px-4 border-t border-gray-800">
+          
+          {/* Main Wrapper to keep items on one line for Desktop, but handle tight space on Mobile */}
+          <div className="flex w-full items-center justify-between gap-1 md:gap-4">
             
-            <div className="flex justify-center items-center gap-6">
-              <GrChapterPrevious 
-                className="cursor-pointer text-gray-400 hover:text-white transition" 
-                size={20} 
-                onClick={prevMusic} 
+            {/* Song Info Section - Shrink text on mobile */}
+            <div className="flex items-center gap-2 md:gap-4 min-w-[80px] md:w-[30%]">
+              <img
+                src={song?.thumbnail?.url || "https://via.placeholder.com/50"}
+                className="w-10 h-10 md:w-12 md:h-12 rounded object-cover flex-shrink-0"
+                alt={song?.title}
               />
-              <button
-                className="bg-white text-black rounded-full p-2 hover:scale-105 transition"
-                onClick={handlePlayPause}
-              >
-                {isPlaying ? <FaPause size={16} /> : <FaPlay size={16} />}
-              </button>
-              <GrChapterNext 
-                className="cursor-pointer text-gray-400 hover:text-white transition" 
-                size={20} 
-                onClick={nextMusic} 
-              />
+              <div className="overflow-hidden leading-tight">
+                <p className="text-[10px] md:text-sm font-bold truncate max-w-[60px] md:max-w-full">{song?.title}</p>
+                <p className="text-[8px] md:text-xs text-gray-400 truncate max-w-[60px] md:max-w-full">{song?.singer}</p>
+              </div>
             </div>
 
-            <div className="w-full flex items-center gap-2 text-xs text-gray-400">
-              <span>{formatTime(progress)}</span>
+            {/* Controls Section - Centered and takes most space on mobile */}
+            <div className="flex flex-col items-center gap-1 flex-grow md:w-[40%]">
+              <audio ref={audioRef} src={song?.audio?.url} />
+              
+              <div className="flex justify-center items-center gap-3 md:gap-6">
+                <GrChapterPrevious 
+                  className="cursor-pointer text-gray-400 hover:text-white transition active:scale-90" 
+                  size={16} 
+                  onClick={prevMusic} 
+                />
+                <button
+                  className="bg-white text-black rounded-full p-1.5 md:p-2 hover:scale-105 active:scale-95 transition"
+                  onClick={handlePlayPause}
+                >
+                  {isPlaying ? <FaPause size={12} className="md:w-4 md:h-4" /> : <FaPlay size={12} className="md:w-4 md:h-4 ml-0.5" />}
+                </button>
+                <GrChapterNext 
+                  className="cursor-pointer text-gray-400 hover:text-white transition active:scale-90" 
+                  size={16} 
+                  onClick={nextMusic} 
+                />
+              </div>
+
+              {/* Seek Bar: Full width for mobile touch */}
+              <div className="w-full flex items-center gap-1 md:gap-2 text-[8px] md:text-xs text-gray-400">
+                <span>{formatTime(progress)}</span>
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  className="progress-bar flex-grow accent-yellow-500 cursor-pointer h-1"
+                  value={duration ? (progress / duration) * 100 : 0}
+                  onChange={handleProgressChange}
+                />
+                <span>{formatTime(duration)}</span>
+              </div>
+            </div>
+
+            {/* Volume Section - Keep it visible but compact on mobile */}
+            <div className="flex items-center justify-end gap-1 md:gap-2 min-w-[70px] md:w-[30%]">
+              <img
+                src={volume === 0 ? assets.mute_icon : assets.volume_icon}
+                className="w-3 md:w-5 cursor-pointer opacity-70 hover:opacity-100 flex-shrink-0"
+                alt="Volume"
+                onClick={handleMute}
+              />
               <input
                 type="range"
+                className="w-12 md:w-20 accent-yellow-500 h-1 cursor-pointer"
                 min="0"
-                max="100"
-                className="progress-bar flex-grow accent-yellow-500 cursor-pointer h-1"
-                // FIXED: Check for NaN to prevent console errors
-                value={duration ? (progress / duration) * 100 : 0}
-                onChange={handleProgressChange}
+                max="1"
+                step="0.01"
+                value={volume}
+                onChange={handleVolumeChange}
               />
-              <span>{formatTime(duration)}</span>
             </div>
-          </div>
 
-          {/* Volume */}
-          <div className="flex items-center justify-end gap-2 w-[30%]">
-            <img
-              src={volume === 0 ? assets.mute_icon : assets.volume_icon}
-              className="w-5 cursor-pointer opacity-70 hover:opacity-100"
-              alt="Volume"
-              onClick={handleMute}
-            />
-            <input
-              type="range"
-              className="w-20 accent-yellow-500 h-1 cursor-pointer"
-              min="0"
-              max="1"
-              step="0.01"
-              value={volume}
-              onChange={handleVolumeChange}
-            />
           </div>
         </div>
       )}
