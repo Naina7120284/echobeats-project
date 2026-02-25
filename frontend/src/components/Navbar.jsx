@@ -12,8 +12,7 @@ const Navbar = () => {
   const getActiveTab = () => {
     if (location.pathname.includes("/playlist")) return "Playlist";
     if (location.pathname.includes("/music")) return "Music";
-    if (location.pathname.includes("/podcasts")) return "Podcasts"; // Check for podcast route
-
+    if (location.pathname.includes("/podcasts")) return "Podcasts";
     return "All";
   };
 
@@ -22,28 +21,26 @@ const Navbar = () => {
   return (
     <>
       <div className="w-full flex justify-between items-center font-semibold">
-        <div className="flex items-center gap-2">
+        {/* ADDED ml-12 for mobile to clear space for the Sidebar hamburger icon */}
+        <div className="flex items-center gap-2 ml-12 lg:ml-0">
           <img
             src={assets.arrow_left}
-            className="w-8 bg-black p-2 rounded-2xl cursor-pointer"
+            className="w-8 bg-black p-2 rounded-2xl cursor-pointer hover:scale-105 active:scale-90 transition"
             alt="Back"
             onClick={() => navigate(-1)}
           />
           <img
             src={assets.arrow_right}
-            className="w-8 bg-black p-2 rounded-2xl cursor-pointer"
+            className="w-8 bg-black p-2 rounded-2xl cursor-pointer hover:scale-105 active:scale-90 transition"
             alt="Forward"
             onClick={() => navigate(+1)}
           />
         </div>
-        <div className="flex items-center justify-end p-4">
-          {/* You can add other elements here if necessary */}
-        </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 md:gap-4">
           <ThemeToggle />
           <p
-            className="bg-white text-black text-[15px] px-4 py-1 rounded-2xl cursor-pointer hover:bg-gray-400 dark:bg-black dark:text-white"
+            className="bg-white text-black text-[13px] md:text-[15px] px-3 md:px-4 py-1 rounded-2xl cursor-pointer hover:bg-gray-400 dark:bg-black dark:text-white transition"
             onClick={logoutUser}
           >
             Logout
@@ -51,78 +48,46 @@ const Navbar = () => {
         </div>
       </div>
 
-      <div className="flex items-center gap-2 mt-4">
+      {/* Categories Row - Added overflow-x-auto so it doesn't break on very small screens */}
+      <div className="flex items-center gap-2 mt-4 overflow-x-auto no-scrollbar pb-2">
         <p
-          className={`px-4 py-1 rounded-2xl cursor-pointer ${
+          className={`px-4 py-1 rounded-2xl cursor-pointer whitespace-nowrap ${
             activeTab === "All"
               ? "bg-white text-black dark:bg-black dark:text-white"
-              : "bg-black text-white dark:bg-white dark:text-black"
+              : "bg-black text-white dark:bg-white dark:text-black border border-gray-800"
           }`}
           onClick={() => navigate("/home")}
         >
           All
         </p>
-        <p
-          className={`px-4 py-1 rounded-2xl cursor-pointer hidden md:block ${
-            activeTab === "Music"
-              ? "bg-white text-black dark:bg-black dark:text-white"
-              : "bg-black text-white dark:bg-white dark:text-black"
-          }`}
-          onClick={() => navigate("/music")}
-        >
-          Music
-        </p>
-
-        <p
-          className={`px-4 py-1 rounded-2xl cursor-pointer hidden md:block ${
-            activeTab === "Playlist"
-              ? "bg-white text-black dark:bg-black dark:text-white"
-              : "bg-black text-white dark:bg-white dark:text-black"
-          }`}
-          onClick={() => navigate("/playlist")}
-        >
-          Playlist
-        </p>
-
-        <p
-          className={`px-4 py-1 rounded-2xl cursor-pointer hidden md:block ${
-            activeTab === "Podcasts"
-              ? "bg-white text-black dark:bg-black dark:text-white"
-              : "bg-black text-white dark:bg-white dark:text-black"
-          }`}
-          onClick={() => navigate("/podcasts")}
-        >
-          Podcasts
-        </p>
-
-        {/* For mobile view */}
-        <p
-          className={`px-4 py-1 rounded-2xl cursor-pointer md:hidden ${
-            activeTab === "Music"
-              ? "bg-white text-black dark:bg-black dark:text-white"
-              : "bg-black text-white dark:bg-white dark:text-black"
-          }`}
-          onClick={() => navigate("/music")}
-        >
-          Music
-        </p>
-        <p
-          className={`px-4 py-1 rounded-2xl cursor-pointer md:hidden ${
-            activeTab === "Playlist"
-              ? "bg-white text-black dark:bg-black dark:text-white"
-              : "bg-black text-white dark:bg-white dark:text-black"
-          }`}
-          onClick={() => navigate("/playlist")}
-        >
-          Playlist
-        </p>
         
-        {/* For mobile view */}
         <p
-          className={`px-4 py-1 rounded-2xl cursor-pointer md:hidden ${
+          className={`px-4 py-1 rounded-2xl cursor-pointer whitespace-nowrap ${
+            activeTab === "Music"
+              ? "bg-white text-black dark:bg-black dark:text-white"
+              : "bg-black text-white dark:bg-white dark:text-black border border-gray-800"
+          }`}
+          onClick={() => navigate("/music")}
+        >
+          Music
+        </p>
+
+        <p
+          className={`px-4 py-1 rounded-2xl cursor-pointer whitespace-nowrap ${
+            activeTab === "Playlist"
+              ? "bg-white text-black dark:bg-black dark:text-white"
+              : "bg-black text-white dark:bg-white dark:text-black border border-gray-800"
+          }`}
+          onClick={() => navigate("/playlist")}
+        >
+          Playlist
+        </p>
+
+        <p
+          className={`px-4 py-1 rounded-2xl cursor-pointer whitespace-nowrap ${
             activeTab === "Podcasts"
               ? "bg-white text-black dark:bg-black dark:text-white"
-              : "bg-black text-white dark:bg-white dark:text-black"
+              : "bg-black text-white dark:bg-white dark:text-black border border-gray-800"
           }`}
           onClick={() => navigate("/podcasts")}
         >

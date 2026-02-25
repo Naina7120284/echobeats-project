@@ -1,52 +1,101 @@
-import React from "react";
+import React, { useState } from "react";
+import { Menu, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import DeveloperModal from "../components/Developer";
-import { useState } from "react";
 
 const Landing = () => {
   const [showModal, setShowModal] = useState(false);
-  return (
-    <div className="min-h-screen text-white overflow-x-hidden">
-      {/* Navbar: flex-wrap ensures items don't collide on tiny screens */}
-<nav className="bg-transparent backdrop-blur-md text-white fixed w-full top-0 left-0 z-50 transition-all">
-  <div className="max-w-7xl mx-auto px-4 py-4">
-    <div className="flex items-center justify-between">
-      {/* Brand: Reduced font on tiny screens (text-xl) */}
-      <Link
-        to="/"
-        className="text-xl xs:text-2xl md:text-3xl font-bold text-white hover:text-yellow-300 transition-colors"
-      >
-        EchoBeats
-      </Link>
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-      <div className="flex items-center space-x-1 sm:space-x-2 md:space-x-6">
-        {/* Hiding About/Developers on small mobile to give room for Login/SignUp */}
-        <a href="#about" className="hidden lg:inline hover:text-yellow-500 scroll-smooth">
-          About
-        </a>
+    return (
+    <div className="min-h-screen  text-white">
+      <nav className="bg-transparent text-white shadow-md fixed w-full top-0 left-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <Link
+              to="/"
+              className="text-3xl font-bold text-white hover:text-yellow-300"
+            >
+              EchoBeats
+            </Link>
 
-        <button
-          onClick={() => setShowModal(true)}
-          className="hidden sm:inline hover:text-yellow-500 text-sm md:text-base"
-        >
-          Developers
-        </button>
-        
-        {/* Buttons: Smaller padding (px-3) on mobile so they fit side-by-side */}
-        <Link to="/login" className="hover:bg-gray-300 bg-white px-3 md:px-6 py-1.5 md:py-2 rounded-xl text-black text-xs md:text-base font-semibold whitespace-nowrap">
-          Login
-        </Link>
-        
-        <Link
-          to="/register"
-          className="bg-yellow-500 px-3 md:px-6 py-1.5 md:py-2 rounded-xl hover:bg-yellow-600 text-white text-xs md:text-base font-semibold whitespace-nowrap"
-        >
-          Sign Up
-        </Link>
-      </div>
-    </div>
-  </div>
-</nav>
+            <div className="hidden lg:flex items-center space-x-6">
+              <a href="#about" className="hover:text-yellow-500 scroll-smooth">
+                About
+              </a>
+
+              <button
+                onClick={() => setShowModal(true)}
+                className="hover:text-yellow-500"
+              >
+                Developers
+              </button>
+               <Link to="/login" className="bg-white text-black font-bold px-6 py-2 rounded-xl border-2 border-transparent hover:bg-gray-300 hover:text-black transition-all duration-300 self-center w-fit"
+              >
+                Login
+              </Link>
+              <Link
+                to="/register"
+                className="bg-yellow-500 text-white font-bold px-6 py-2 rounded-xl border-2 border-transparent hover:bg-yellow-600 hover:text-white transition-all duration-300 self-center w-fit"
+              >
+                Sign Up
+              </Link>
+            </div>
+            <div className="lg:hidden flex items-center">
+              <button 
+                onClick={() => setIsMenuOpen(!isMenuOpen)} 
+                className="text-white focus:outline-none"
+              >
+                {isMenuOpen ? <X size={30} /> : <Menu size={30} />}
+              </button>
+            </div>
+          </div>
+
+          {/* Mobile Navigation Menu */}
+          {isMenuOpen && (
+            <div className="lg:hidden mt-4 pb-4 flex flex-col space-y-4 bg-black/50 rounded-lg p-4 transition-all">
+              <a 
+                href="#about" 
+                onClick={() => setIsMenuOpen(false)} 
+                className="text-sm text-center font-medium tracking-wide text-gray-100 transition-all duration-300 ease-in-out hover:text-yellow-500 hover:scale-105"
+              >
+                About
+              </a>
+              <button
+                onClick={() => {
+                  setShowModal(true);
+                  setIsMenuOpen(false);
+                }}
+                className="text-left text-center font-medium tracking-wide text-gray-100 transition-all duration-300 ease-in-out hover:text-yellow-500 hover:scale-105"
+              >
+                Developers
+              </button>
+              <Link 
+                to="/login" 
+                onClick={() => setIsMenuOpen(false)}
+               className="bg-white text-black px-6 py-2 rounded-xl text-center font-bold w-fit mx-auto hover:bg-gray-200 hover:scale-105 transition-all duration-300"
+              >
+                Login
+              </Link>
+              <Link
+                to="/register"
+                onClick={() => setIsMenuOpen(false)}
+                className="bg-yellow-500 px-6 py-2 rounded-xl text-white text-center font-bold w-fit mx-auto hover:bg-yellow-600 hover:scale-105 transition-all duration-300"
+              >
+                Sign Up
+              </Link>
+            </div>
+          )}
+          
+          
+          <DeveloperModal
+            isOpen={showModal}
+            onClose={() => setShowModal(false)}
+          />
+        </div>
+      </nav>
+      
+
 
       {/* Hero Section */}
       <div

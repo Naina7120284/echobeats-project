@@ -41,12 +41,13 @@ const DeveloperModal = ({ isOpen, onClose }) => {
     },
   ];
 
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex justify-center items-center z-50">
-      <div className="bg-white p-6 rounded-2xl max-w-3xl w-full relative shadow-2xl">
+return (
+    <div className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex justify-center items-center z-50 p-4"> {/* Added p-4 for safe area */}
+      <div className="bg-white p-6 rounded-2xl max-w-3xl w-full mx-4 relative shadow-2xl max-h-[90vh] overflow-y-auto"> 
+        {/* Added mx-4, max-h, and overflow-y-auto */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-black hover:text-red-500 transition"
+          className="absolute top-4 right-4 text-black hover:text-red-500 transition z-10"
         >
           <X size={24} />
         </button>
@@ -59,7 +60,7 @@ const DeveloperModal = ({ isOpen, onClose }) => {
               <img
                 src={dev.image}
                 alt={dev.name}
-                className="w-24 h-24 mx-auto rounded-full mb-4 "
+                className="w-24 h-24 mx-auto rounded-full mb-4 object-cover shadow-sm" 
               />
               <h3 className="text-lg font-semibold text-black">{dev.name}</h3>
               <div className="flex justify-center gap-4 mt-2">

@@ -95,50 +95,51 @@ const Player = () => {
   return (
     <div className="fixed bottom-0 w-full z-50">
       {song && (
-        <div className="h-24 md:h-20 bg-[#121212] flex flex-col md:flex-row justify-between items-center text-white px-2 md:px-4 border-t border-gray-800">
+        <div className="h-24 md:h-20 bg-[#121212]/95 backdrop-blur-md flex flex-col justify-center text-white px-3 md:px-6 border-t border-gray-800 shadow-2xl">
           
-          {/* Main Wrapper to keep items on one line for Desktop, but handle tight space on Mobile */}
-          <div className="flex w-full items-center justify-between gap-1 md:gap-4">
+          {/* Audio Element */}
+          <audio ref={audioRef} src={song?.audio?.url} />
+
+          <div className="flex items-center justify-between gap-2 md:gap-4">
             
-            {/* Song Info Section - Shrink text on mobile */}
-            <div className="flex items-center gap-2 md:gap-4 min-w-[80px] md:w-[30%]">
+            {/* 1. Song Info (Left) */}
+            <div className="flex items-center gap-2 md:gap-4 flex-1 min-w-0">
               <img
                 src={song?.thumbnail?.url || "https://via.placeholder.com/50"}
-                className="w-10 h-10 md:w-12 md:h-12 rounded object-cover flex-shrink-0"
+                className="w-10 h-10 md:w-14 md:h-14 rounded-md object-cover flex-shrink-0 shadow-lg"
                 alt={song?.title}
               />
-              <div className="overflow-hidden leading-tight">
-                <p className="text-[10px] md:text-sm font-bold truncate max-w-[60px] md:max-w-full">{song?.title}</p>
-                <p className="text-[8px] md:text-xs text-gray-400 truncate max-w-[60px] md:max-w-full">{song?.singer}</p>
+              <div className="min-w-0 overflow-hidden leading-tight">
+                <p className="text-xs md:text-sm font-bold truncate">{song?.title}</p>
+                <p className="text-[10px] md:text-xs text-gray-400 truncate">{song?.singer}</p>
               </div>
             </div>
 
-            {/* Controls Section - Centered and takes most space on mobile */}
-            <div className="flex flex-col items-center gap-1 flex-grow md:w-[40%]">
-              <audio ref={audioRef} src={song?.audio?.url} />
-              
-              <div className="flex justify-center items-center gap-3 md:gap-6">
+            {/* 2. Main Controls & Seek (Center) */}
+            <div className="flex flex-col items-center gap-1 flex-[2] max-w-[50%] md:max-w-full">
+              {/* Buttons */}
+              <div className="flex justify-center items-center gap-4 md:gap-8">
                 <GrChapterPrevious 
-                  className="cursor-pointer text-gray-400 hover:text-white transition active:scale-90" 
-                  size={16} 
+                  className="cursor-pointer text-gray-400 hover:text-white transition active:scale-75" 
+                  size={18} 
                   onClick={prevMusic} 
                 />
                 <button
-                  className="bg-white text-black rounded-full p-1.5 md:p-2 hover:scale-105 active:scale-95 transition"
+                  className="bg-white text-black rounded-full p-2 md:p-3 hover:scale-105 active:scale-95 transition flex items-center justify-center"
                   onClick={handlePlayPause}
                 >
-                  {isPlaying ? <FaPause size={12} className="md:w-4 md:h-4" /> : <FaPlay size={12} className="md:w-4 md:h-4 ml-0.5" />}
+                  {isPlaying ? <FaPause size={14} /> : <FaPlay size={14} className="ml-0.5" />}
                 </button>
                 <GrChapterNext 
-                  className="cursor-pointer text-gray-400 hover:text-white transition active:scale-90" 
-                  size={16} 
+                  className="cursor-pointer text-gray-400 hover:text-white transition active:scale-75" 
+                  size={18} 
                   onClick={nextMusic} 
                 />
               </div>
 
-              {/* Seek Bar: Full width for mobile touch */}
-              <div className="w-full flex items-center gap-1 md:gap-2 text-[8px] md:text-xs text-gray-400">
-                <span>{formatTime(progress)}</span>
+              {/* Seek Bar */}
+              <div className="w-full flex items-center gap-2 text-[10px] md:text-xs text-gray-500 font-medium">
+                <span className="hidden xs:inline">{formatTime(progress)}</span>
                 <input
                   type="range"
                   min="0"
@@ -147,21 +148,31 @@ const Player = () => {
                   value={duration ? (progress / duration) * 100 : 0}
                   onChange={handleProgressChange}
                 />
-                <span>{formatTime(duration)}</span>
+                <span className="hidden xs:inline">{formatTime(duration)}</span>
               </div>
             </div>
 
-            {/* Volume Section - Keep it visible but compact on mobile */}
-            <div className="flex items-center justify-end gap-1 md:gap-2 min-w-[70px] md:w-[30%]">
+            {/* 3. Volume Section (Right) */}
+            <div className="flex items-center justify-end gap-2 flex-1 min-w-[60px] md:min-w-[120px]">
               <img
                 src={volume === 0 ? assets.mute_icon : assets.volume_icon}
-                className="w-3 md:w-5 cursor-pointer opacity-70 hover:opacity-100 flex-shrink-0"
+                className="w-4 md:w-5 cursor-pointer opacity-70 hover:opacity-100 transition"
                 alt="Volume"
                 onClick={handleMute}
               />
               <input
                 type="range"
-                className="w-12 md:w-20 accent-yellow-500 h-1 cursor-pointer"
+                className="hidden sm:block w-20 md:w-24 accent-yellow-500 h-1 cursor-pointer"
+                min="0"
+                max="1"
+                step="0.01"
+                value={volume}
+                onChange={handleVolumeChange}
+              />
+              {/* On very small mobile, we hide the slider to avoid overlap but keep it functional via the Mute icon */}
+              <input
+                type="range"
+                className="block sm:hidden w-10 accent-yellow-500 h-1 cursor-pointer"
                 min="0"
                 max="1"
                 step="0.01"
