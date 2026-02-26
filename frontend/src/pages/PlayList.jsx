@@ -74,8 +74,7 @@ const PlayList = ({ user }) => {
       {myPlaylist &&
         myPlaylist.map((e, i) => (
           <div
-            className="grid grid-cols-3 sm:grid-cols-4 mt-10 mb-4 pl-2 text-[#a7a7a7]  dark:text-black hover:bg-[#ffffff2b] dark:hover:bg-[#4538382b] hover:rounded hover:scale-[1.01] transition-all duration-200
- cursor-pointer"
+            className="grid grid-cols-3 sm:grid-cols-4 mt-10 mb-4 pl-2 text-[#a7a7a7]  dark:text-black hover:bg-[#ffffff2b] dark:hover:bg-[#4538382b] hover:rounded hover:scale-[1.01] transition-all duration-200 cursor-pointer"
             key={i}
           >
             <p className="text-white  dark:text-black">

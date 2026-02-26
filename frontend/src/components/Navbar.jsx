@@ -21,8 +21,11 @@ const Navbar = () => {
   return (
     <>
       <div className="w-full flex justify-between items-center font-semibold">
-        {/* ADDED ml-12 for mobile to clear space for the Sidebar hamburger icon */}
-        <div className="flex items-center gap-2 ml-12 lg:ml-0">
+        {/* FIX: Removed 'lg:ml-0'. 
+            'ml-12' now stays on Desktop too, so the back arrow 
+            never hides behind the hamburger menu.
+        */}
+        <div className="flex items-center gap-2 ml-12">
           <img
             src={assets.arrow_left}
             className="w-8 bg-black p-2 rounded-2xl cursor-pointer hover:scale-105 active:scale-90 transition"
@@ -48,7 +51,7 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Categories Row - Added overflow-x-auto so it doesn't break on very small screens */}
+      {/* Categories Row */}
       <div className="flex items-center gap-2 mt-4 overflow-x-auto no-scrollbar pb-2">
         <p
           className={`px-4 py-1 rounded-2xl cursor-pointer whitespace-nowrap ${
