@@ -8,6 +8,17 @@ const Home = () => {
   // Use optional fallback to empty arrays to prevent spread errors
   const { songs = [], albums = [] } = SongData();
 
+  if (loading) {
+    return (
+      <div className="flex h-screen w-full items-center justify-center bg-[#0f0f0f]">
+        <div className="flex flex-col items-center gap-4">
+          <div className="h-12 w-12 animate-spin rounded-full border-4 border-[#d1f24d] border-t-transparent"></div>
+          <p className="text-[#d1f24d] font-medium animate-pulse">Tuning the beats...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <Layout>
       {/* Top Playlist Section */}
